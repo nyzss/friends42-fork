@@ -213,6 +213,15 @@ class Db:
 			return []
 		return ret
 
+	def get_user_all_cookies(self, who: int) -> list:
+		if who is None:
+			return []
+		req = self.cur.execute('SELECT * FROM COOKIES WHERE userid = ? ORDER BY creation DESC', [who])
+		ret = req.fetchall()
+		if ret is None:
+			return []
+		return ret
+
 	def reset_user_cookies(self, who: int):
 		if who is None:
 			return False
@@ -264,6 +273,10 @@ class Db:
 
 	def get_issues(self):
 		req = self.cur.execute("SELECT station, issue, since FROM DEAD_PC WHERE solved = 0")
+		return req.fetchall()
+
+	def get_issues_by_user(self, user):
+		req = self.cur.execute("SELECT * FROM DEAD_PC WHERE issuer = ?", [user])
 		return req.fetchall()
 
 	# Profile
@@ -318,6 +331,10 @@ class Db:
 	def get_mate_by_id(self, mate_id):
 		req = self.cur.execute("SELECT * FROM MATES WHERE id = ?", [mate_id])
 		return req.fetchone()
+
+	def get_mates_by_user(self, who_id):
+		req = self.cur.execute("SELECT * FROM MATES WHERE creator_id = ?", [who_id])
+		return req.fetchall()
 
 	def get_mates(self, project: str, campus: int):
 		req = self.cur.execute("SELECT * FROM MATES WHERE project = ? AND campus = ? ORDER BY created DESC",
@@ -457,8 +474,8 @@ class Db:
 	def is_piscine(self, campus: int, cluster: str):
 		req = self.cur.execute("SELECT 1 FROM PISCINES WHERE campus = ? AND cluster LIKE ?", [campus, cluster])
 		return True if req.fetchone() else False
-	
-    # Silents clusters
+
+	# Silents clusters
 	def insert_silent(self, campus: int, cluster: str):
 		self.cur.execute("INSERT INTO SILENTS(campus, cluster) VALUES(?, ?)", [campus, cluster])
 		self.commit()
@@ -509,6 +526,10 @@ class Db:
 			WHERE dest = ? OR author = ?
 			ORDER BY created DESC""",
 			[dest, dest])
+		return req.fetchall()
+
+	def get_raw_messages(self, who):
+		req = self.cur.execute("SELECT * FROM MESSAGES WHERE author = ? OR dest = ?", [who, who])
 		return req.fetchall()
 
 	def mark_messages_as_read(self, dest):
