@@ -121,6 +121,7 @@ class Api:
 		ret = []
 		i = 1
 		page_numbers = 1
+		campus = 1
 		while i <= page_numbers:
 			# 1200 students max
 			if i > 12:

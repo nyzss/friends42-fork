@@ -20,11 +20,13 @@ from routes.api_helpers import *
 def proxy_images(url: str, light=False):
 	if not url:
 		return "/static/img/unknown.jpg"
-	if light:
-		return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/resize/70/')
-	if 'small' in url or 'medium' in url:
-		return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/')
-	return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/resize/512/')
+	# if light:
+	# 	return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/resize/70/')
+	# if 'small' in url or 'medium' in url:
+	# 	return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/')
+	# return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/resize/512/')
+	# return "https://cdn.intra.42.fr/users/"
+	return url
 
 
 def auth_required(function):
